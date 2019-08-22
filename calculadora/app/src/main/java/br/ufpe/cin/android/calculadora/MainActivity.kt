@@ -2,21 +2,70 @@ package br.ufpe.cin.android.calculadora
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_main.*
+
+private const val TAG = "ConstraintLayoutApp"
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setNumeralButtonListeners()
+        setExpressionButtonListeners()
     }
 
+    // Make numerical and dot buttons appear on the text_calc
+    private fun setNumeralButtonListeners() {
+        btn_0.setOnClickListener {
+
+        }
+        val buttonListeners = arrayOf(
+            btn_0,
+            btn_1,
+            btn_2,
+            btn_3,
+            btn_4,
+            btn_5,
+            btn_6,
+            btn_7,
+            btn_8,
+            btn_9,
+            btn_Dot)
+
+        buttonListeners.map {
+            button ->  button.setOnClickListener {
+                text_calc.append(button.text.toString())
+            }
+        }
+    }
+
+    // Every time an expression button is clicked, append the value of the text_calc field
+    // with the expression value and show on text_info
+    private fun setExpressionButtonListeners() {
+        val buttonListeners = arrayOf(btn_Divide,
+            btn_Multiply,
+            btn_Add,
+            btn_Subtract,
+            btn_LParen,
+            btn_RParen)
+
+        buttonListeners.map {
+            button -> button.setOnClickListener {
+            text_info.text = text_calc.text.toString()
+            text_info.append(button.text.toString())
+            text_calc.text.clear()
+            }
+        }
+    }
 
     //Como usar a função:
     // eval("2+2") == 4.0
     // eval("2+3*4") = 14.0
     // eval("(2+3)*4") = 20.0
     //Fonte: https://stackoverflow.com/a/26227947
-    fun eval(str: String): Double {
+    private fun eval(str: String): Double {
         return object : Any() {
             var pos = -1
             var ch: Char = ' '
@@ -104,3 +153,4 @@ class MainActivity : AppCompatActivity() {
         }.parse()
     }
 }
+
