@@ -11,18 +11,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        text_calc.text = null
 
-        setNumeralButtonListeners()
-        setExpressionButtonListeners()
+        setButtonListeners()
         setEqualButtonListener()
         setClearButtonListener()
     }
 
-    // Make numerical and dot buttons appear on the text_calc
-    private fun setNumeralButtonListeners() {
-        btn_0.setOnClickListener {
-
-        }
+    // Make buttons appear on the text_calc
+    private fun setButtonListeners() {
         val buttonListeners = arrayOf(
             btn_0,
             btn_1,
@@ -34,30 +31,17 @@ class MainActivity : AppCompatActivity() {
             btn_7,
             btn_8,
             btn_9,
-            btn_Dot)
+            btn_Dot,
+            btn_LParen,
+            btn_RParen,
+            btn_Divide,
+            btn_Multiply,
+            btn_Add,
+            btn_Subtract)
 
         buttonListeners.map {
             button ->  button.setOnClickListener {
                 text_calc.append(button.text.toString())
-            }
-        }
-    }
-
-    // Every time an expression button is clicked, append the value of the text_calc field
-    // with the expression value and show on text_info
-    private fun setExpressionButtonListeners() {
-        val buttonListeners = arrayOf(btn_Divide,
-            btn_Multiply,
-            btn_Add,
-            btn_Subtract,
-            btn_LParen,
-            btn_RParen)
-
-        buttonListeners.map {
-            button -> button.setOnClickListener {
-                text_info.text = text_calc.text.toString()
-                text_info.append(button.text.toString())
-                clearTextCalc()
             }
         }
     }
@@ -73,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     // Append text in text_info with decimal in text_calc and evaluate the expression
     private fun setEqualButtonListener() {
         btn_Equal.setOnClickListener {
-            text_info.append(text_calc.text.toString())
+            text_info.text = text_calc.text.toString()
             tryToEvaluateExpressionAndShowOnTextInfo()
             clearTextCalc()
         }
@@ -81,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun tryToEvaluateExpressionAndShowOnTextInfo() {
         try {
-            val result = eval(text_info.toString())
+            val result = eval(text_info.text.toString())
             text_info.append("\n" + result)
         } catch(e: RuntimeException) {
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
