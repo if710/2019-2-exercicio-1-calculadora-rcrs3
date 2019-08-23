@@ -2,9 +2,9 @@ package br.ufpe.cin.android.calculadora
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-
-private const val TAG = "ConstraintLayoutApp"
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
 
         setNumeralButtonListeners()
         setExpressionButtonListeners()
+        setEqualButtonListener()
+        setClearButtonListener()
     }
 
     // Make numerical and dot buttons appear on the text_calc
@@ -53,11 +55,41 @@ class MainActivity : AppCompatActivity() {
 
         buttonListeners.map {
             button -> button.setOnClickListener {
-            text_info.text = text_calc.text.toString()
-            text_info.append(button.text.toString())
-            text_calc.text.clear()
+                text_info.text = text_calc.text.toString()
+                text_info.append(button.text.toString())
+                clearTextCalc()
             }
         }
+    }
+
+    // Clear all text fields
+    private fun setClearButtonListener() {
+        btn_Clear.setOnClickListener {
+            text_calc.text.clear()
+            text_info.text = null
+        }
+    }
+
+    // Append text in text_info with decimal in text_calc and evaluate the expression
+    private fun setEqualButtonListener() {
+        btn_Equal.setOnClickListener {
+            text_info.append(text_calc.text.toString())
+            tryToEvaluateExpressionAndShowOnTextInfo()
+            clearTextCalc()
+        }
+    }
+
+    private fun tryToEvaluateExpressionAndShowOnTextInfo() {
+        try {
+            val result = eval(text_info.toString())
+            text_info.append("\n" + result)
+        } catch(e: RuntimeException) {
+            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun clearTextCalc() {
+        text_calc.text.clear()
     }
 
     //Como usar a função:
