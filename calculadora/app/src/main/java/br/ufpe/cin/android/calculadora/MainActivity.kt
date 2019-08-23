@@ -18,6 +18,18 @@ class MainActivity : AppCompatActivity() {
         setClearButtonListener()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("text_info", text_info.text.toString())
+        outState.putString("text_calc", text_calc.text.toString())
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        text_info.text = savedInstanceState.getString("text_info")
+        text_calc.setText(savedInstanceState.getString("text_calc"))
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
     // Make buttons appear on the text_calc
     private fun setButtonListeners() {
         val buttonListeners = arrayOf(
@@ -71,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun clearTextCalc() {
         text_calc.text.clear()
     }
